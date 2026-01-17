@@ -1,0 +1,97 @@
+.duel-menu {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-sand);
+}
+
+.duel-menu__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--color-sand-dark);
+}
+
+.duel-menu__title {
+    font-size: 1.25rem;
+    color: var(--color-brown-dark);
+}
+
+.duel-menu__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    gap: var(--spacing-2xl);
+}
+
+.duel-menu__options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-lg);
+    width: 100%;
+    max-width: 300px;
+}
+
+.duel-menu__divider {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: var(--spacing-md);
+    color: var(--color-brown-light);
+}
+
+.duel-menu__divider::before,
+.duel-menu__divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-brown-light);
+}
+
+.duel-menu__join {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    width: 100%;
+}
+
+.duel-menu__input {
+    width: 100%;
+    padding: var(--spacing-md);
+    font-size: 1.25rem;
+    font-family: var(--font-display);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    border: 2px solid var(--color-brown);
+    border-radius: var(--radius-md);
+    background-color: var(--color-white);
+    color: var(--color-black);
+}
+
+.duel-menu__input::placeholder {
+    color: var(--color-brown-light);
+    letter-spacing: normal;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    text-transform: none;
+}
+
+.duel-menu__input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+}
+
+.duel-menu__notice {
+    padding: var(--spacing-lg);
+    background: var(--color-sand-dark);
+    border-radius: var(--radius-md);
+    color: var(--color-brown);
+    text-align: center;
+}

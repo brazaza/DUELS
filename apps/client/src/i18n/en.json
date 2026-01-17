@@ -1,0 +1,59 @@
+{
+    "app": {
+        "title": "Duels"
+    },
+    "menu": {
+        "training": "Training",
+        "duel": "Duel",
+        "settings": "Settings"
+    },
+    "training": {
+        "title": "Training Mode",
+        "instructions": "Show ✋ open palm and clench into ✊ fist to shoot",
+        "start": "Start",
+        "ready": "Get ready...",
+        "draw": "DRAW!",
+        "tooEarly": "Too early!",
+        "yourTime": "Your time",
+        "bestTime": "Best time",
+        "tryAgain": "Try again",
+        "back": "Back",
+        "ms": "ms"
+    },
+    "duel": {
+        "title": "Duel Mode",
+        "createRoom": "Create Room",
+        "joinRoom": "Join Room",
+        "enterCode": "Enter room code",
+        "join": "Join",
+        "or": "or",
+        "waiting": "Waiting for opponent...",
+        "shareLink": "Share this link",
+        "copyLink": "Copy",
+        "copied": "Copied!",
+        "ready": "Ready",
+        "notReady": "Not ready",
+        "opponent": "Opponent",
+        "you": "You",
+        "draw": "DRAW!",
+        "win": "Victory!",
+        "lose": "Defeat",
+        "tie": "Tie",
+        "reactionTime": "Reaction time",
+        "didntShoot": "Didn't shoot",
+        "playAgain": "Play again",
+        "leave": "Leave",
+        "back": "Back"
+    },
+    "camera": {
+        "requesting": "Requesting camera access...",
+        "denied": "Camera access denied",
+        "notFound": "Camera not found",
+        "switchCamera": "Switch camera"
+    },
+    "errors": {
+        "connectionLost": "Connection lost",
+        "roomNotFound": "Room not found",
+        "roomFull": "Room is full"
+    }
+}

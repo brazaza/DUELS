@@ -1,0 +1,118 @@
+/* ============================================
+   Pixel Cowboy Styles
+   ============================================ */
+
+.pixel-cowboy {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    transition: transform 0.1s ease-out;
+}
+
+.pixel-cowboy--mirrored {
+    transform: scaleX(-1);
+}
+
+.pixel-cowboy__sprite {
+    width: 64px;
+    height: 96px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* Animations */
+.pixel-cowboy--idle {
+    animation: cowboyIdle 1s ease-in-out infinite;
+}
+
+.pixel-cowboy--ready {
+    animation: cowboyReady 0.3s ease-in-out infinite;
+}
+
+.pixel-cowboy--aim {
+    animation: none;
+}
+
+.pixel-cowboy--shoot {
+    animation: cowboyShoot 0.15s ease-out;
+}
+
+.pixel-cowboy--win {
+    animation: cowboyWin 0.5s ease-in-out infinite;
+}
+
+.pixel-cowboy--dead {
+    animation: cowboyDead 0.4s ease-out forwards;
+}
+
+@keyframes cowboyIdle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+}
+
+@keyframes cowboyReady {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-1px) rotate(-1deg); }
+}
+
+@keyframes cowboyShoot {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(-4px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes cowboyWin {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    25% { transform: translateY(-8px) rotate(-5deg); }
+    75% { transform: translateY(-8px) rotate(5deg); }
+}
+
+@keyframes cowboyDead {
+    0% { transform: translateY(0) rotate(0); opacity: 1; }
+    50% { transform: translateY(0) rotate(15deg); }
+    100% { transform: translateY(20px) rotate(90deg); opacity: 0.7; }
+}
+
+.pixel-cowboy--mirrored.pixel-cowboy--shoot {
+    animation: cowboyShootMirrored 0.15s ease-out;
+}
+
+@keyframes cowboyShootMirrored {
+    0% { transform: scaleX(-1) translateX(0); }
+    50% { transform: scaleX(-1) translateX(4px); }
+    100% { transform: scaleX(-1) translateX(0); }
+}
+
+.pixel-cowboy--mirrored.pixel-cowboy--dead {
+    animation: cowboyDeadMirrored 0.4s ease-out forwards;
+}
+
+@keyframes cowboyDeadMirrored {
+    0% { transform: scaleX(-1) translateY(0) rotate(0); opacity: 1; }
+    50% { transform: scaleX(-1) translateY(0) rotate(-15deg); }
+    100% { transform: scaleX(-1) translateY(20px) rotate(-90deg); opacity: 0.7; }
+}
+
+/* Target */
+.pixel-target {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.pixel-target__sprite {
+    width: 64px;
+    height: 96px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.pixel-target--hit {
+    animation: targetHit 0.3s ease-out;
+}
+
+@keyframes targetHit {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+}

@@ -1,0 +1,215 @@
+/* ============================================
+   Cowboy Component Styles
+   ============================================ */
+
+.cowboy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform var(--transition-fast);
+}
+
+.cowboy--mirrored {
+    transform: scaleX(-1);
+}
+
+/* Sizes */
+.cowboy--small {
+    font-size: 2rem;
+}
+
+.cowboy--medium {
+    font-size: 3rem;
+}
+
+.cowboy--large {
+    font-size: 4rem;
+}
+
+.cowboy__face {
+    line-height: 1;
+}
+
+.cowboy__body {
+    display: flex;
+    justify-content: center;
+}
+
+.cowboy__arm {
+    font-size: 0.6em;
+    transition: transform var(--transition-fast);
+}
+
+/* States */
+.cowboy--idle .cowboy__arm {
+    transform: rotate(-30deg);
+}
+
+.cowboy--ready .cowboy__arm {
+    transform: rotate(-15deg);
+    animation: armReady 0.5s ease-in-out infinite;
+}
+
+.cowboy--draw .cowboy__arm {
+    transform: rotate(0deg);
+}
+
+.cowboy--shoot .cowboy__arm {
+    transform: rotate(15deg);
+}
+
+.cowboy--animating {
+    animation: shootRecoil 0.3s ease-out;
+}
+
+.cowboy--win {
+    animation: celebrate 0.5s ease-in-out;
+}
+
+.cowboy--lose {
+    animation: fall 0.5s ease-out;
+}
+
+@keyframes armReady {
+    0%, 100% { transform: rotate(-15deg); }
+    50% { transform: rotate(-10deg); }
+}
+
+@keyframes shootRecoil {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(-10px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes celebrate {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    25% { transform: translateY(-10px) rotate(-5deg); }
+    75% { transform: translateY(-10px) rotate(5deg); }
+}
+
+@keyframes fall {
+    0% { transform: translateY(0) rotate(0); opacity: 1; }
+    100% { transform: translateY(20px) rotate(15deg); opacity: 0.7; }
+}
+
+/* SVG Cowboy */
+.cowboy-svg {
+    width: 80px;
+    height: 120px;
+    transition: all var(--transition-fast);
+}
+
+.cowboy-svg--mirrored {
+    transform: scaleX(-1);
+}
+
+.cowboy-svg__arm {
+    transform-origin: 65px 74px;
+    transition: transform var(--transition-fast);
+}
+
+.cowboy-svg__arm--shoot {
+    animation: svgArmShoot 0.3s ease-out;
+}
+
+@keyframes svgArmShoot {
+    0% { transform: rotate(0); }
+    50% { transform: rotate(-20deg); }
+    100% { transform: rotate(0); }
+}
+
+/* Duel Arena Layout */
+.duel-arena {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    max-width: 500px;
+    padding: var(--spacing-lg);
+    background: linear-gradient(to bottom, #87CEEB 0%, #F5E6D3 60%, #D4A574 100%);
+    border-radius: var(--radius-lg);
+    min-height: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.duel-arena::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(to bottom, transparent, rgba(139, 115, 85, 0.3));
+}
+
+.duel-arena__player {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.duel-arena__player-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-brown-dark);
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+}
+
+.duel-arena__vs {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-accent);
+    text-shadow: 1px 1px 0 var(--color-white);
+    z-index: 1;
+}
+
+/* Training Arena - single player */
+.training-arena {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 300px;
+    padding: var(--spacing-lg);
+    background: linear-gradient(to bottom, #87CEEB 0%, #F5E6D3 60%, #D4A574 100%);
+    border-radius: var(--radius-lg);
+    min-height: 180px;
+    position: relative;
+}
+
+.training-arena::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(to bottom, transparent, rgba(139, 115, 85, 0.3));
+}
+
+.training-arena__cowboy {
+    z-index: 1;
+    margin-top: auto;
+}
+
+/* Room code styling */
+.room-code {
+    font-size: 0.875rem;
+    color: var(--color-brown);
+    background: var(--color-sand-light);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    margin-top: 4px;
+}
+
+.room-code strong {
+    font-family: monospace;
+    font-size: 1rem;
+    color: var(--color-accent);
+    letter-spacing: 0.1em;
+}
