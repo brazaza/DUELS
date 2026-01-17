@@ -6,9 +6,15 @@
         "module": "ESNext",
         "moduleResolution": "bundler",
         "noEmit": false,
-        "declaration": true
+        "declaration": true,
+        "baseUrl": ".",
+        "paths": {
+            "@duels/shared": ["../../packages/shared/src/index.ts"],
+            "@duels/shared/*": ["../../packages/shared/src/*"]
+        }
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "../../packages/shared/src/**/*"
     ]
 }

@@ -20,7 +20,8 @@ import { SignalingHandler } from './signalingHandler.js';
 import { nanoid } from './utils.js';
 
 // Load environment variables
-const PORT = Number(process.env.WS_PORT) || CONFIG.WS_PORT;
+// Railway uses PORT, fallback to WS_PORT or default
+const PORT = Number(process.env.PORT) || Number(process.env.WS_PORT) || CONFIG.WS_PORT;
 
 // Player connection tracking
 interface PlayerConnection {
