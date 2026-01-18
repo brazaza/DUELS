@@ -60,6 +60,7 @@ const transitions: Record<DuelState, Partial<Record<DuelAction['type'], DuelStat
     [DuelState.IDLE]: {
         CREATE_ROOM: DuelState.LOBBY,
         JOIN_ROOM: DuelState.LOBBY,
+        ROOM_INFO: DuelState.LOBBY, // Fix: Allow syncing room info from IDLE
     },
     [DuelState.LOBBY]: {
         ROOM_INFO: DuelState.LOBBY,
