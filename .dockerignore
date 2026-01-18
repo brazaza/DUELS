@@ -1,0 +1,11 @@
+node_modules
+dist
+.git
+.env
+.DS_Store
+coverage
+.vscode
+.idea
+apps/client/dist
+apps/server/dist
+packages/shared/dist

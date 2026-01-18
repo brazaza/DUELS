@@ -6,6 +6,7 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
+        "build:client": "bun run build",
         "preview": "vite preview",
         "lint": "eslint . --ext ts,tsx",
         "clean": "rimraf dist"
