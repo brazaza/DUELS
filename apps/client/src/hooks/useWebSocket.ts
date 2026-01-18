@@ -112,6 +112,8 @@ export function useWebSocket(): UseWebSocketResult {
             ws.onclose = () => {
                 console.log('WebSocket disconnected');
                 setIsConnected(false);
+                setRoomCode(null); // Clear room code to prevent ghost state
+                setPlayers([]);
 
                 // Auto-reconnect after 3 seconds
                 if (!reconnectTimeoutRef.current) {
