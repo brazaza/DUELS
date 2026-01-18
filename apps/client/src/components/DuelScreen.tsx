@@ -190,27 +190,53 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
                 </div>
             </header>
 
-            {/* My Camera Section (Top) */}
-            <section className="game-screen__camera">
-                <div className="video-container">
-                    <video
-                        ref={camera.videoRef}
-                        autoPlay
-                        playsInline
-                        muted
-                    />
-                    {handTracking.gesture.gesture !== GestureType.NONE && (
-                        <div className="video-overlay">
-                            {getGestureIndicator()}
-                        </div>
-                    )}
-                    {camera.isLoading && (
-                        <div className="video-loading">{t('camera.requesting')}</div>
-                    )}
-                </div>
-            </section>
+            {/* Cameras Container */}
+            <div className="game-screen__cameras-container">
+                {/* My Camera */}
+                <section className="game-screen__camera">
+                    <div className="video-container">
+                        <video
+                            ref={camera.videoRef}
+                            autoPlay
+                            playsInline
+                            muted
+                        />
+                        {handTracking.gesture.gesture !== GestureType.NONE && (
+                            <div className="video-overlay">
+                                {getGestureIndicator()}
+                            </div>
+                        )}
+                        {camera.isLoading && (
+                            <div className="video-loading">{t('camera.requesting')}</div>
+                        )}
+                    </div>
+                </section>
 
-            {/* Game Arena (Middle) */}
+                {/* Opponent Camera (Desktop: Right, Mobile: Bottom) */}
+                <section className="game-screen__camera game-screen__camera--opponent">
+                    <div className="video-container">
+                        {webrtc.remoteStream ? (
+                            <video
+                                ref={remoteVideoRef}
+                                autoPlay
+                                playsInline
+                                className="opponent-video"
+                            />
+                        ) : (
+                            <div className="opponent-placeholder">
+                                <div className={`status-dot ${opponent ? 'status-dot--online' : 'status-dot--offline'}`} />
+                                <span>{opponent?.name || t('duel.waiting')}</span>
+                            </div>
+                        )}
+                        <div className="opponent-status">
+                            {opponent?.isReady && <span className="ready-badge">READY</span>}
+                            {game.context.opponentHandReady && <span className="hand-indicator">✋</span>}
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            {/* Game Arena (Middle on Desktop) */}
             <section className="game-screen__arena">
                 <GameArena variant="duel">
                     {/* My Cowboy */}
@@ -246,29 +272,6 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
                         <GameBanner text="..." variant="wait" />
                     )}
                 </GameArena>
-            </section>
-
-            {/* Opponent Camera Section (Bottom) */}
-            <section className="game-screen__camera game-screen__camera--opponent">
-                <div className="video-container video-container--small">
-                    {webrtc.remoteStream ? (
-                        <video
-                            ref={remoteVideoRef}
-                            autoPlay
-                            playsInline
-                            className="opponent-video"
-                        />
-                    ) : (
-                        <div className="opponent-placeholder">
-                            <div className={`status-dot ${opponent ? 'status-dot--online' : 'status-dot--offline'}`} />
-                            <span>{opponent?.name || t('duel.waiting')}</span>
-                        </div>
-                    )}
-                    <div className="opponent-status">
-                        {opponent?.isReady && <span className="ready-badge">READY</span>}
-                        {game.context.opponentHandReady && <span className="hand-indicator">✋</span>}
-                    </div>
-                </div>
             </section>
 
             {/* Controls Section */}
