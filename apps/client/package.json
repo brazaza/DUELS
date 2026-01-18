@@ -11,7 +11,7 @@
         "clean": "rimraf dist"
     },
     "dependencies": {
-        "@duels/shared": "*",
+        "@duels/shared": "workspace:*",
         "@mediapipe/hands": "^0.4.1675469240",
         "@mediapipe/camera_utils": "^0.3.1675466862",
         "react": "^18.2.0",

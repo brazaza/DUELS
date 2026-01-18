@@ -1,4 +1,0 @@
-[install]
-# Workspaces
-[workspace]
-packages = ["apps/*", "packages/*"]

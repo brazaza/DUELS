@@ -6,9 +6,9 @@ COPY package.json bun.lockb* ./
 COPY packages ./packages
 COPY apps/server ./apps/server
 
-RUN cd apps/server && bun install
+RUN bun install
 
 ENV PORT=3001
 EXPOSE 3001
 
-CMD ["bun", "apps/server/src/index.ts"]
+CMD ["bun", "run", "--cwd", "apps/server", "start"]
