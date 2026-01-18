@@ -10,9 +10,10 @@ export type DuelAction =
     | { type: 'ROOM_INFO'; roomCode: string; playerId: string; players: Player[] }
     | { type: 'PLAYER_JOINED'; player: Player }
     | { type: 'PLAYER_LEFT'; playerId: string }
+    | { type: 'PLAYER_READY_CHANGED'; playerId: string; isReady: boolean }  // Toggle ready state
     | { type: 'BOTH_READY' }                              // Both clicked "Ready" button
-    | { type: 'HAND_READY'; playerId: string; isReady: boolean }  // NEW: Player hand state
-    | { type: 'BOTH_HANDS_READY' }                        // NEW: Both show palms
+    | { type: 'HAND_READY'; playerId: string; isReady: boolean }  // Player hand state
+    | { type: 'BOTH_HANDS_READY' }                        // Both show palms
     | { type: 'COUNTDOWN_COMPLETE' }
     | { type: 'WAIT_COMPLETE'; drawTime: number }
     | { type: 'PLAYER_SHOT'; playerId: string; reactionTime: number }
@@ -113,6 +114,17 @@ export function duelReducer(
     action: DuelAction
 ): DuelContext {
     const currentState = context.state;
+
+    // Special case: PLAYER_READY_CHANGED updates player ready state without transition
+    if (action.type === 'PLAYER_READY_CHANGED') {
+        const updatedPlayers = context.players.map(p => 
+            p.id === action.playerId ? { ...p, isReady: action.isReady } : p
+        );
+        return {
+            ...context,
+            players: updatedPlayers,
+        };
+    }
 
     // Special case: HAND_READY updates hand state without transition
     if (action.type === 'HAND_READY') {

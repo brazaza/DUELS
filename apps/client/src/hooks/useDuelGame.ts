@@ -49,10 +49,10 @@ export function useDuelGame(ws: ReturnType<typeof useWebSocket>) {
         osc.stop(audioContextRef.current.currentTime + duration);
     }, []);
 
-    // Handle WebSocket messages
+    // Sync players from ws to context whenever they change
     useEffect(() => {
-        // Sync initial state if we missed the message
-        if (ws.roomCode && !context.roomCode && ws.playerId) {
+        if (ws.roomCode && ws.playerId && ws.players.length > 0) {
+            // Always sync players from ws hook to ensure consistency
             dispatch({
                 type: 'ROOM_INFO',
                 roomCode: ws.roomCode,
@@ -60,6 +60,10 @@ export function useDuelGame(ws: ReturnType<typeof useWebSocket>) {
                 players: ws.players
             });
         }
+    }, [ws.roomCode, ws.playerId, ws.players]);
+
+    // Handle WebSocket messages
+    useEffect(() => {
 
         ws.onMessage((message: ServerMessage) => {
             switch (message.type) {
@@ -88,6 +92,11 @@ export function useDuelGame(ws: ReturnType<typeof useWebSocket>) {
 
                 case MessageType.PLAYER_LEFT:
                     dispatch({ type: 'PLAYER_LEFT', playerId: message.playerId });
+                    break;
+
+                case MessageType.PLAYER_READY_CHANGED:
+                    // Update player ready state in context
+                    dispatch({ type: 'PLAYER_READY_CHANGED', playerId: message.playerId, isReady: message.isReady });
                     break;
 
                 case MessageType.GAME_STATE_UPDATE: {

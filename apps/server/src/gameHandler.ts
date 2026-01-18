@@ -15,6 +15,7 @@ import {
     GameResultMessage,
     GameStateUpdateMessage,
     PlayerHandReadyMessage,
+    PlayerReadyChangedMessage,
 } from '@duels/shared';
 import { RoomManager } from './roomManager.js';
 
@@ -29,14 +30,22 @@ export class GameHandler {
     ) { }
 
     handlePlayerReady(roomCode: string, playerId: string): void {
-        const room = this.roomManager.setPlayerReady(playerId, true);
+        const room = this.roomManager.getRoom(roomCode);
         if (!room) return;
 
-        // Notify all players about ready state
+        // Find the player and toggle their ready state
+        const player = room.players.find(p => p.id === playerId);
+        if (!player) return;
+
+        const newReadyState = !player.isReady;
+        this.roomManager.setPlayerReady(playerId, newReadyState);
+
+        // Notify all players about this player's ready state change
         this.broadcast(roomCode, {
-            type: MessageType.GAME_STATE_UPDATE,
-            state: room.state,
-        } as GameStateUpdateMessage);
+            type: MessageType.PLAYER_READY_CHANGED,
+            playerId,
+            isReady: newReadyState,
+        } as PlayerReadyChangedMessage);
 
         // Check if both players clicked ready button
         if (this.roomManager.areBothPlayersReady(room)) {

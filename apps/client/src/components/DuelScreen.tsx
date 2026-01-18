@@ -90,6 +90,13 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
 
     const roomCode = ws.roomCode || game.context.roomCode;
 
+    // Set local stream for WebRTC so we can receive offers (for non-host)
+    useEffect(() => {
+        if (camera.stream) {
+            webrtc.setLocalStream(camera.stream);
+        }
+    }, [camera.stream, webrtc]);
+
     // Initiate WebRTC when both players are in lobby
     useEffect(() => {
         // Host initiates WebRTC connection when opponent joins
@@ -97,6 +104,7 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
             // Only host (first player) initiates
             const isHost = game.context.players[0]?.id === game.context.playerId;
             if (isHost) {
+                console.log('Host initiating WebRTC connection to opponent:', opponent.id);
                 webrtc.initiate(camera.stream, opponent.id);
             }
         }
@@ -164,10 +172,9 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
     const me = game.context.players.find(p => p.id === game.context.playerId);
     const isMyReady = me?.isReady || false;
 
-    // Show ready button in LOBBY when both players present, or in READY state if not yet ready
+    // Show ready button in LOBBY when both players present (can toggle ready/unready)
     const showReadyButton = (
-        (game.context.state === DuelState.LOBBY && game.context.players.length === 2 && !isMyReady) ||
-        (game.context.state === DuelState.READY && !isMyReady)
+        game.context.state === DuelState.LOBBY && game.context.players.length === 2
     );
 
     return (
@@ -295,10 +302,10 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
             <section className="game-screen__controls">
                 {showReadyButton && (
                     <button
-                        className="btn btn-primary btn-large"
+                        className={`btn btn-large ${isMyReady ? 'btn-secondary' : 'btn-primary'}`}
                         onClick={handleReady}
                     >
-                        {t('duel.ready')}
+                        {isMyReady ? t('duel.notReady') : t('duel.ready')}
                     </button>
                 )}
 

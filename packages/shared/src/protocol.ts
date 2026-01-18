@@ -19,6 +19,7 @@ export enum MessageType {
     ROOM_JOINED = 'ROOM_JOINED',
     PLAYER_JOINED = 'PLAYER_JOINED',
     PLAYER_LEFT = 'PLAYER_LEFT',
+    PLAYER_READY_CHANGED = 'PLAYER_READY_CHANGED',  // Notify about player ready state toggle
     PLAYER_HAND_READY = 'PLAYER_HAND_READY',  // NEW: Notify about player hand state
     GAME_STATE_UPDATE = 'GAME_STATE_UPDATE',
     COUNTDOWN_START = 'COUNTDOWN_START',
@@ -118,6 +119,12 @@ export interface PlayerLeftMessage {
     playerId: string;
 }
 
+export interface PlayerReadyChangedMessage {
+    type: MessageType.PLAYER_READY_CHANGED;
+    playerId: string;
+    isReady: boolean;
+}
+
 export interface PlayerHandReadyMessage {
     type: MessageType.PLAYER_HAND_READY;
     playerId: string;
@@ -170,6 +177,7 @@ export type ServerMessage =
     | RoomJoinedMessage
     | PlayerJoinedMessage
     | PlayerLeftMessage
+    | PlayerReadyChangedMessage
     | PlayerHandReadyMessage
     | GameStateUpdateMessage
     | CountdownStartMessage

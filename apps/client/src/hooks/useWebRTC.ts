@@ -11,6 +11,7 @@ export interface UseWebRTCResult {
     isConnected: boolean;
     remoteStream: MediaStream | null;
     initiate: (localStream: MediaStream, targetPlayerId: string) => Promise<void>;
+    setLocalStream: (stream: MediaStream) => void;
     close: () => void;
 }
 
@@ -164,6 +165,7 @@ export function useWebRTC(
         isConnected,
         remoteStream,
         initiate,
+        setLocalStream,
         close,
     };
 }
