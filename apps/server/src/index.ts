@@ -2,6 +2,7 @@
 // Duels WebSocket Server
 // ============================================
 
+import { createServer } from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import {
     CONFIG,
@@ -186,8 +187,23 @@ function handlePlayerLeave(playerId: string): void {
     } as PlayerLeftMessage);
 }
 
-// Create WebSocket server (bind to all interfaces for LAN access)
-const wss = new WebSocketServer({ port: PORT, host: '0.0.0.0' });
+// Create HTTP server for health checks and WebSocket upgrade
+const server = createServer((req, res) => {
+    if (req.url === '/health') {
+        res.writeHead(200);
+        res.end('OK');
+        return;
+    }
+    res.writeHead(404);
+    res.end();
+});
+
+// Create WebSocket server attached to HTTP server
+const wss = new WebSocketServer({ server });
+
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`🤠 Duels WebSocket server running on port ${PORT}`);
+});
 
 wss.on('connection', (ws: WebSocket) => {
     const playerId = nanoid(12);
@@ -221,4 +237,4 @@ setInterval(() => {
     roomManager.cleanup(3600000); // Clean rooms older than 1 hour
 }, 60000);
 
-console.log(`🤠 Duels WebSocket server running on port ${PORT}`);
+
