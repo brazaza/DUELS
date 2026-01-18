@@ -51,6 +51,16 @@ export function useDuelGame(ws: ReturnType<typeof useWebSocket>) {
 
     // Handle WebSocket messages
     useEffect(() => {
+        // Sync initial state if we missed the message
+        if (ws.roomCode && !context.roomCode && ws.playerId) {
+            dispatch({
+                type: 'ROOM_INFO',
+                roomCode: ws.roomCode,
+                playerId: ws.playerId,
+                players: ws.players
+            });
+        }
+
         ws.onMessage((message: ServerMessage) => {
             switch (message.type) {
                 case MessageType.ROOM_CREATED:
@@ -138,7 +148,7 @@ export function useDuelGame(ws: ReturnType<typeof useWebSocket>) {
                 }
             }
         });
-    }, [ws, playSound]);
+    }, [ws, playSound, context.roomCode]);
 
     // Handle local gestures
     const handleGesture = useCallback((gesture: GestureType) => {

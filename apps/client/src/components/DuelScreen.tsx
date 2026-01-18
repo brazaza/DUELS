@@ -146,56 +146,6 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
         ws.setReady();
     };
 
-
-    const getStateDisplay = () => {
-        const { state, result, myReactionTime, opponentReactionTime, isEarlyShot } = game.context;
-
-        switch (state) {
-            case DuelState.LOBBY:
-                return <div className="training__state">{t('duel.waiting')}</div>;
-
-            case DuelState.READY:
-                return (
-                    <div className="training__state">
-                        <div className="text-sm mb-2">{t('training.instructions')}</div>
-                        <div className="animate-pulse">✋ {t('duel.ready')}?</div>
-                    </div>
-                );
-
-            case DuelState.HANDS_READY:
-                return <div className="training__state training__state--countdown">✋ OK!</div>;
-
-            case DuelState.COUNTDOWN:
-                return <div className="training__state training__state--countdown">{t('training.ready')}</div>;
-
-            case DuelState.WAIT_DRAW:
-                return <div className="training__state training__state--wait">...</div>;
-
-            case DuelState.DRAW:
-                return <div className="training__state training__state--draw animate-pulse">{t('training.draw')}</div>;
-
-            case DuelState.RESULT:
-                if (isEarlyShot) {
-                    return <div className="training__state training__state--early animate-shake">{t('training.tooEarly')}</div>;
-                }
-
-                const isWinner = result?.winnerId === game.context.playerId;
-                return (
-                    <div className={`training__state ${isWinner ? 'text-green-500' : 'text-red-500'}`}>
-                        <div className="text-4xl font-bold mb-2">
-                            {isWinner ? t('duel.win') : t('duel.lose')}
-                        </div>
-                        <div className="text-xl">
-                            {myReactionTime} {t('training.ms')}
-                        </div>
-                    </div>
-                );
-
-            default:
-                return null;
-        }
-    };
-
     // Determine gesture indicator - show palm and fist continuously
     const getGestureIndicator = () => {
         switch (handTracking.gesture.gesture) {
@@ -206,26 +156,141 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
             case GestureType.SHOT:
                 return <span className="gesture-indicator gesture-indicator--shot">✊</span>;
             default:
-                <button
-                    className="btn btn-primary btn-large"
-                    onClick={handleReady}
-                >
-                    {t('duel.ready')}
-                </button>
-                )
-}
+                return null;
+        }
+    };
 
-{
-    game.context.state === DuelState.RESULT && (
-        <button
-            className="btn btn-primary btn-large"
-            onClick={handleLeave}
-        >
-            {t('duel.leave')}
-        </button>
-    )
-}
-            </section >
-        </div >
+    return (
+        <div className="game-screen game-screen--duel">
+            {/* Header */}
+            <header className="game-screen__header">
+                <div className="game-screen__header-left">
+                    <IconButton
+                        icon="←"
+                        label={t('duel.leave')}
+                        onClick={handleLeave}
+                        variant="danger"
+                    />
+                </div>
+                <div className="game-screen__header-center">
+                    <h1 className="game-screen__title">{t('duel.title')}</h1>
+                    {roomCode && (
+                        <button
+                            className="game-screen__room-code game-screen__room-code--clickable"
+                            onClick={handleShare}
+                            title="Click to copy invite link"
+                        >
+                            🔗 <strong>{roomCode}</strong>
+                        </button>
+                    )}
+                </div>
+                <div className="game-screen__header-right">
+                    <IconButton icon="🔗" label="Share" onClick={handleShare} className="desktop-only" />
+                    <BurgerMenu items={menuItems} className="burger-menu--mobile-only" />
+                </div>
+            </header>
+
+            {/* My Camera Section (Top) */}
+            <section className="game-screen__camera">
+                <div className="video-container">
+                    <video
+                        ref={camera.videoRef}
+                        autoPlay
+                        playsInline
+                        muted
+                    />
+                    {handTracking.gesture.gesture !== GestureType.NONE && (
+                        <div className="video-overlay">
+                            {getGestureIndicator()}
+                        </div>
+                    )}
+                    {camera.isLoading && (
+                        <div className="video-loading">{t('camera.requesting')}</div>
+                    )}
+                </div>
+            </section>
+
+            {/* Game Arena (Middle) */}
+            <section className="game-screen__arena">
+                <GameArena variant="duel">
+                    {/* My Cowboy */}
+                    <PixelCowboy state={getCowboyState(true)} color="blue" />
+
+                    {/* Opponent Cowboy */}
+                    <PixelCowboy state={getCowboyState(false)} color="red" mirrored />
+
+                    {/* Game Banners */}
+                    {game.context.state === DuelState.LOBBY && game.context.players.length < 2 && (
+                        <GameBanner
+                            text={`${t('duel.waiting')} (${game.context.players.length}/2)`}
+                            variant="default"
+                        />
+                    )}
+                    {game.context.state === DuelState.DRAW && (
+                        <GameBanner text="BANG!" variant="bang" animate />
+                    )}
+                    {game.context.state === DuelState.RESULT && game.context.isEarlyShot && (
+                        <GameBanner text={t('training.tooEarly')} variant="early" animate />
+                    )}
+                    {game.context.state === DuelState.RESULT && !game.context.isEarlyShot && game.context.result && (
+                        <GameBanner
+                            text={game.context.result.winnerId === game.context.playerId ? t('duel.win') : t('duel.lose')}
+                            variant={game.context.result.winnerId === game.context.playerId ? 'win' : 'lose'}
+                            animate
+                        />
+                    )}
+                    {game.context.state === DuelState.COUNTDOWN && (
+                        <GameBanner text="3" variant="countdown" animate />
+                    )}
+                    {game.context.state === DuelState.WAIT_DRAW && (
+                        <GameBanner text="..." variant="wait" />
+                    )}
+                </GameArena>
+            </section>
+
+            {/* Opponent Camera Section (Bottom) */}
+            <section className="game-screen__camera game-screen__camera--opponent">
+                <div className="video-container video-container--small">
+                    {webrtc.remoteStream ? (
+                        <video
+                            ref={remoteVideoRef}
+                            autoPlay
+                            playsInline
+                            className="opponent-video"
+                        />
+                    ) : (
+                        <div className="opponent-placeholder">
+                            <div className={`status-dot ${opponent ? 'status-dot--online' : 'status-dot--offline'}`} />
+                            <span>{opponent?.name || t('duel.waiting')}</span>
+                        </div>
+                    )}
+                    <div className="opponent-status">
+                        {opponent?.isReady && <span className="ready-badge">READY</span>}
+                        {game.context.opponentHandReady && <span className="hand-indicator">✋</span>}
+                    </div>
+                </div>
+            </section>
+
+            {/* Controls Section */}
+            <section className="game-screen__controls">
+                {game.context.state === DuelState.LOBBY && game.context.players.length === 2 && (
+                    <button
+                        className="btn btn-primary btn-large"
+                        onClick={handleReady}
+                    >
+                        {t('duel.ready')}
+                    </button>
+                )}
+
+                {game.context.state === DuelState.RESULT && (
+                    <button
+                        className="btn btn-primary btn-large"
+                        onClick={handleLeave}
+                    >
+                        {t('duel.leave')}
+                    </button>
+                )}
+            </section>
+        </div>
     );
 }
