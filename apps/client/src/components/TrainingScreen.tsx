@@ -142,10 +142,10 @@ export function TrainingScreen({ onBack }: TrainingScreenProps) {
             {/* Header */}
             <header className="game-screen__header">
                 <div className="game-screen__header-left">
-                    <IconButton 
-                        icon="←" 
-                        label={t('training.back')} 
-                        onClick={onBack} 
+                    <IconButton
+                        icon="←"
+                        label={t('training.back')}
+                        onClick={onBack}
                     />
                 </div>
                 <h1 className="game-screen__title">{t('training.title')}</h1>
@@ -187,10 +187,10 @@ export function TrainingScreen({ onBack }: TrainingScreenProps) {
                 <GameArena variant="training">
                     {/* Cowboy */}
                     <PixelCowboy state={getCowboyState()} color="blue" />
-                    
+
                     {/* Target */}
                     <PixelTarget hit={game.context.state === TrainingState.RESULT && !game.context.isEarlyShot} />
-                    
+
                     {/* Game Banner */}
                     {game.context.state === TrainingState.DRAW && (
                         <GameBanner text="BANG!" variant="bang" animate />
@@ -202,10 +202,10 @@ export function TrainingScreen({ onBack }: TrainingScreenProps) {
                         <GameBanner text={`${game.context.reactionTime}ms`} variant="win" animate />
                     )}
                     {game.context.state === TrainingState.COUNTDOWN && game.context.countdownValue > 0 && (
-                        <GameBanner 
-                            text={String(game.context.countdownValue)} 
-                            variant="countdown" 
-                            animate 
+                        <GameBanner
+                            text={String(game.context.countdownValue)}
+                            variant="countdown"
+                            animate
                             key={game.context.countdownValue}
                         />
                     )}
@@ -220,13 +220,19 @@ export function TrainingScreen({ onBack }: TrainingScreenProps) {
                 {game.context.state === TrainingState.IDLE && (
                     <>
                         <p className="game-screen__instructions">{t('training.instructions')}</p>
-                        <button
-                            className="btn btn-primary btn-large"
-                            onClick={handleStart}
-                            disabled={!camera.isActive || !handTracking.isInitialized}
-                        >
-                            {t('training.start')}
-                        </button>
+                        {handTracking.error ? (
+                            <div className="text-red-500 mb-4 animate-shake">{handTracking.error}</div>
+                        ) : (
+                            <button
+                                className="btn btn-primary btn-large"
+                                onClick={handleStart}
+                                disabled={!camera.isActive || !handTracking.isInitialized}
+                            >
+                                {!handTracking.isInitialized ? 'Loading AI...' :
+                                    !camera.isActive ? 'Starting Camera...' :
+                                        t('training.start')}
+                            </button>
+                        )}
                     </>
                 )}
 

@@ -58,7 +58,7 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
     // Get cowboy animation state based on game state
     const getCowboyState = (isMe: boolean): CowboyAnimState => {
         const { state, result, isEarlyShot } = game.context;
-        
+
         switch (state) {
             case DuelState.IDLE:
             case DuelState.LOBBY:
@@ -214,9 +214,9 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
             {/* Header */}
             <header className="game-screen__header">
                 <div className="game-screen__header-left">
-                    <IconButton 
-                        icon="←" 
-                        label={t('duel.leave')} 
+                    <IconButton
+                        icon="←"
+                        label={t('duel.leave')}
                         onClick={handleLeave}
                         variant="danger"
                     />
@@ -224,7 +224,7 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
                 <div className="game-screen__header-center">
                     <h1 className="game-screen__title">{t('duel.title')}</h1>
                     {roomCode && (
-                        <button 
+                        <button
                             className="game-screen__room-code game-screen__room-code--clickable"
                             onClick={handleShare}
                             title="Click to copy invite link"
@@ -267,13 +267,16 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
                 <GameArena variant="duel">
                     {/* My Cowboy */}
                     <PixelCowboy state={getCowboyState(true)} color="blue" />
-                    
+
                     {/* Opponent Cowboy */}
                     <PixelCowboy state={getCowboyState(false)} color="red" mirrored />
-                    
+
                     {/* Game Banners */}
                     {game.context.state === DuelState.LOBBY && game.context.players.length < 2 && (
-                        <GameBanner text={t('duel.waiting')} variant="default" />
+                        <GameBanner
+                            text={`${t('duel.waiting')} (${game.context.players.length}/2)`}
+                            variant="default"
+                        />
                     )}
                     {game.context.state === DuelState.DRAW && (
                         <GameBanner text="BANG!" variant="bang" animate />
@@ -282,10 +285,10 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
                         <GameBanner text={t('training.tooEarly')} variant="early" animate />
                     )}
                     {game.context.state === DuelState.RESULT && !game.context.isEarlyShot && game.context.result && (
-                        <GameBanner 
-                            text={game.context.result.winnerId === game.context.playerId ? t('duel.win') : t('duel.lose')} 
-                            variant={game.context.result.winnerId === game.context.playerId ? 'win' : 'lose'} 
-                            animate 
+                        <GameBanner
+                            text={game.context.result.winnerId === game.context.playerId ? t('duel.win') : t('duel.lose')}
+                            variant={game.context.result.winnerId === game.context.playerId ? 'win' : 'lose'}
+                            animate
                         />
                     )}
                     {game.context.state === DuelState.COUNTDOWN && (
