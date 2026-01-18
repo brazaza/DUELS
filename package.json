@@ -4,20 +4,17 @@
   "private": true,
   "description": "Browser-based 2D duel game with webcam gesture detection",
   "scripts": {
-    "dev": "pnpm -r --parallel dev",
-    "dev:client": "pnpm --filter @duels/client dev",
-    "dev:server": "pnpm --filter @duels/server dev",
-    "build": "pnpm -r build",
-    "build:client": "pnpm --filter @duels/shared build && pnpm --filter @duels/client build",
-    "build:server": "pnpm --filter @duels/server build",
-    "lint": "pnpm -r lint",
-    "clean": "pnpm -r clean"
+    "dev": "bun run dev:server & bun run dev:client",
+    "dev:client": "cd apps/client && bun run dev",
+    "dev:server": "cd apps/server && bun run dev",
+    "build": "bun run build:client && bun run build:server",
+    "build:client": "cd apps/client && bun run build",
+    "build:server": "cd apps/server && bun run build",
+    "lint": "cd apps/client && bun run lint",
+    "clean": "cd apps/client && bun run clean && cd ../server && bun run clean"
   },
   "keywords": ["duel", "game", "mediapipe", "gesture", "webrtc"],
   "author": "",
   "license": "MIT",
-  "packageManager": "pnpm@9.0.0",
-  "engines": {
-    "node": ">=18.0.0"
-  }
+  "packageManager": "bun@1.0.0"
 }

@@ -1,15 +1,14 @@
-FROM node:20-slim
-
-RUN npm install -g pnpm
+FROM oven/bun:1
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json bun.lockb* ./
 COPY packages ./packages
 COPY apps/server ./apps/server
 
-RUN pnpm install --frozen-lockfile
+RUN cd apps/server && bun install
 
-EXPOSE 8080
+ENV PORT=3001
+EXPOSE 3001
 
-CMD ["pnpm", "--filter", "@duels/server", "start"]
+CMD ["bun", "apps/server/src/index.ts"]

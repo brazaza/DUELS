@@ -1,9 +1,9 @@
 services:
   - type: web
     name: duels-server
-    runtime: node
-    buildCommand: npm install -g pnpm && pnpm install
-    startCommand: cd apps/server && pnpm start
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: NODE_VERSION
-        value: 20
+      - key: PORT
+        value: 3001
