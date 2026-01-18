@@ -160,6 +160,16 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
         }
     };
 
+    // Check if player is ready
+    const me = game.context.players.find(p => p.id === game.context.playerId);
+    const isMyReady = me?.isReady || false;
+
+    // Show ready button in LOBBY when both players present, or in READY state if not yet ready
+    const showReadyButton = (
+        (game.context.state === DuelState.LOBBY && game.context.players.length === 2 && !isMyReady) ||
+        (game.context.state === DuelState.READY && !isMyReady)
+    );
+
     return (
         <div className="game-screen game-screen--duel">
             {/* Header */}
@@ -190,10 +200,10 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
                 </div>
             </header>
 
-            {/* Cameras Container */}
-            <div className="game-screen__cameras-container">
+            {/* Main Content Area - different structure for mobile vs desktop */}
+            <div className="game-screen__main">
                 {/* My Camera */}
-                <section className="game-screen__camera">
+                <section className="game-screen__camera game-screen__camera--me">
                     <div className="video-container">
                         <video
                             ref={camera.videoRef}
@@ -209,10 +219,55 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
                         {camera.isLoading && (
                             <div className="video-loading">{t('camera.requesting')}</div>
                         )}
+                        {isMyReady && <span className="ready-badge ready-badge--me">READY</span>}
                     </div>
                 </section>
 
-                {/* Opponent Camera (Desktop: Right, Mobile: Bottom) */}
+                {/* Game Arena */}
+                <section className="game-screen__arena">
+                    <GameArena variant="duel">
+                        {/* My Cowboy */}
+                        <PixelCowboy state={getCowboyState(true)} color="blue" />
+
+                        {/* Opponent Cowboy */}
+                        <PixelCowboy state={getCowboyState(false)} color="red" mirrored />
+
+                        {/* Game Banners */}
+                        {game.context.state === DuelState.LOBBY && game.context.players.length < 2 && (
+                            <GameBanner
+                                text={`${t('duel.waiting')} (${game.context.players.length}/2)`}
+                                variant="default"
+                            />
+                        )}
+                        {game.context.state === DuelState.LOBBY && game.context.players.length === 2 && !isMyReady && (
+                            <GameBanner text={t('duel.pressReady')} variant="default" />
+                        )}
+                        {game.context.state === DuelState.READY && (
+                            <GameBanner text={t('duel.waitingReady')} variant="default" />
+                        )}
+                        {game.context.state === DuelState.DRAW && (
+                            <GameBanner text="BANG!" variant="bang" animate />
+                        )}
+                        {game.context.state === DuelState.RESULT && game.context.isEarlyShot && (
+                            <GameBanner text={t('training.tooEarly')} variant="early" animate />
+                        )}
+                        {game.context.state === DuelState.RESULT && !game.context.isEarlyShot && game.context.result && (
+                            <GameBanner
+                                text={game.context.result.winnerId === game.context.playerId ? t('duel.win') : t('duel.lose')}
+                                variant={game.context.result.winnerId === game.context.playerId ? 'win' : 'lose'}
+                                animate
+                            />
+                        )}
+                        {game.context.state === DuelState.COUNTDOWN && (
+                            <GameBanner text="3" variant="countdown" animate />
+                        )}
+                        {game.context.state === DuelState.WAIT_DRAW && (
+                            <GameBanner text="..." variant="wait" />
+                        )}
+                    </GameArena>
+                </section>
+
+                {/* Opponent Camera */}
                 <section className="game-screen__camera game-screen__camera--opponent">
                     <div className="video-container">
                         {webrtc.remoteStream ? (
@@ -236,47 +291,9 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
                 </section>
             </div>
 
-            {/* Game Arena (Middle on Desktop) */}
-            <section className="game-screen__arena">
-                <GameArena variant="duel">
-                    {/* My Cowboy */}
-                    <PixelCowboy state={getCowboyState(true)} color="blue" />
-
-                    {/* Opponent Cowboy */}
-                    <PixelCowboy state={getCowboyState(false)} color="red" mirrored />
-
-                    {/* Game Banners */}
-                    {game.context.state === DuelState.LOBBY && game.context.players.length < 2 && (
-                        <GameBanner
-                            text={`${t('duel.waiting')} (${game.context.players.length}/2)`}
-                            variant="default"
-                        />
-                    )}
-                    {game.context.state === DuelState.DRAW && (
-                        <GameBanner text="BANG!" variant="bang" animate />
-                    )}
-                    {game.context.state === DuelState.RESULT && game.context.isEarlyShot && (
-                        <GameBanner text={t('training.tooEarly')} variant="early" animate />
-                    )}
-                    {game.context.state === DuelState.RESULT && !game.context.isEarlyShot && game.context.result && (
-                        <GameBanner
-                            text={game.context.result.winnerId === game.context.playerId ? t('duel.win') : t('duel.lose')}
-                            variant={game.context.result.winnerId === game.context.playerId ? 'win' : 'lose'}
-                            animate
-                        />
-                    )}
-                    {game.context.state === DuelState.COUNTDOWN && (
-                        <GameBanner text="3" variant="countdown" animate />
-                    )}
-                    {game.context.state === DuelState.WAIT_DRAW && (
-                        <GameBanner text="..." variant="wait" />
-                    )}
-                </GameArena>
-            </section>
-
             {/* Controls Section */}
             <section className="game-screen__controls">
-                {game.context.state === DuelState.LOBBY && game.context.players.length === 2 && (
+                {showReadyButton && (
                     <button
                         className="btn btn-primary btn-large"
                         onClick={handleReady}
@@ -288,9 +305,12 @@ export function DuelScreen({ ws, onBack }: DuelScreenProps) {
                 {game.context.state === DuelState.RESULT && (
                     <button
                         className="btn btn-primary btn-large"
-                        onClick={handleLeave}
+                        onClick={() => {
+                            game.reset();
+                            handleReady();
+                        }}
                     >
-                        {t('duel.leave')}
+                        {t('duel.playAgain')}
                     </button>
                 )}
             </section>

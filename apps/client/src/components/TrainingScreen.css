@@ -16,11 +16,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
     background: var(--color-white);
     border-bottom: 2px solid var(--color-sand-dark);
-    position: sticky;
-    top: 0;
+    flex: 0 0 auto;
     z-index: 50;
 }
 
@@ -29,7 +28,7 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
-    min-width: 80px;
+    min-width: 60px;
 }
 
 .game-screen__header-right {
@@ -38,27 +37,46 @@
 
 .game-screen__title {
     font-family: var(--font-display);
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: var(--color-brown-dark);
     margin: 0;
 }
 
 .game-screen__best-time {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     font-weight: 600;
+    color: var(--color-success);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--color-sand-light);
+    border-radius: var(--radius-sm);
+}
+
+/* Camera Section - Training */
+.game-screen__camera {
+    flex: 0 0 auto;
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    padding: var(--spacing-md);
+    align-items: center;
+    padding: var(--spacing-sm);
+    background: var(--color-sand);
+}
+
+/* Arena Section */
+.game-screen__arena {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: stretch;
 }
 
 /* Controls Section */
 .game-screen__controls {
-    padding: var(--spacing-md) var(--spacing-lg);
+    flex: 0 0 auto;
+    padding: var(--spacing-sm) var(--spacing-md);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
     background: var(--color-white);
     border-top: 2px solid var(--color-sand-dark);
 }
@@ -66,9 +84,10 @@
 .game-screen__instructions {
     text-align: center;
     color: var(--color-brown);
-    font-size: 0.9rem;
-    line-height: 1.5;
+    font-size: 0.85rem;
+    line-height: 1.4;
     margin: 0;
+    max-width: 300px;
 }
 
 /* Legacy classes for compatibility */

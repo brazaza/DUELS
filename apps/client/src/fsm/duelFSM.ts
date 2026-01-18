@@ -102,7 +102,8 @@ const transitions: Record<DuelState, Partial<Record<DuelAction['type'], DuelStat
         LEAVE: DuelState.IDLE,
     },
     [DuelState.RESULT]: {
-        RESET: DuelState.READY,
+        RESET: DuelState.LOBBY,
+        BOTH_READY: DuelState.READY,  // Allow play again
         LEAVE: DuelState.IDLE,
     },
 };
@@ -190,8 +191,8 @@ export function duelReducer(
                 ...createDuelContext(),
                 roomCode: context.roomCode,
                 playerId: context.playerId,
-                players: context.players,
-                state: DuelState.READY,
+                players: context.players.map(p => ({ ...p, isReady: false, handReady: false })),
+                state: DuelState.LOBBY,
             };
             break;
 

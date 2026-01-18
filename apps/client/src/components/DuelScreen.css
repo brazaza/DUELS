@@ -2,120 +2,133 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
+    background: var(--color-sand);
+    color: var(--color-black);
 }
 
-/* Desktop Layout: Cameras side-by-side at TOP, Arena at BOTTOM */
+/* Header */
+.game-screen--duel .game-screen__header {
+    flex: 0 0 auto;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--color-white);
+    border-bottom: 2px solid var(--color-sand-dark);
+    z-index: 50;
+}
+
+/* Main content area */
+.game-screen--duel .game-screen__main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Controls */
+.game-screen--duel .game-screen__controls {
+    flex: 0 0 auto;
+    padding: var(--spacing-sm) var(--spacing-md);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md);
+    background: var(--color-white);
+    border-top: 2px solid var(--color-sand-dark);
+    min-height: 60px;
+}
+
+/* ============================================
+   Desktop Layout: Cameras side-by-side at top
+   ============================================ */
 @media (min-width: 768px) {
-    .game-screen--duel {
-        justify-content: flex-start;
+    .game-screen--duel .game-screen__main {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr auto;
+        grid-template-areas:
+            "camera-me camera-opponent"
+            "arena arena";
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
     }
 
-    /* Container for the two cameras at the top */
-    .game-screen__cameras-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        gap: 2rem;
-        padding: 1rem;
-        height: 40vh;
-        /* Adjust height as needed */
-        min-height: 300px;
-        flex: 0 0 auto;
+    .game-screen--duel .game-screen__camera--me {
+        grid-area: camera-me;
     }
 
-    .game-screen__camera {
-        flex: 1;
-        max-width: 600px;
-        /* Limit width */
-        border: 4px solid #8b4513;
-        border-radius: 12px;
-        background: #000;
+    .game-screen--duel .game-screen__camera--opponent {
+        grid-area: camera-opponent;
+    }
+
+    .game-screen--duel .game-screen__arena {
+        grid-area: arena;
+        min-height: 200px;
+    }
+
+    .game-screen--duel .game-screen__camera {
+        border: 3px solid var(--color-brown);
+        border-radius: var(--radius-lg);
+        background: var(--color-black);
         position: relative;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    /* Arena takes the remaining space at the bottom */
-    .game-screen__arena {
-        flex: 1;
-        border-top: 4px solid #8b4513;
-        background: rgba(0, 0, 0, 0.6);
-    }
-
-    .game-screen__controls {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 20;
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        min-height: 200px;
+        max-height: 40vh;
     }
 }
 
-/* Mobile Layout: Vertical stack (My Cam -> Arena -> Opponent Cam) */
+/* ============================================
+   Mobile Layout: My Cam -> Arena -> Opponent Cam
+   ============================================ */
 @media (max-width: 767px) {
-    .game-screen--duel {
-        height: auto;
-        min-height: 100vh;
-        overflow-y: auto;
-        /* Allow scrolling */
-        display: block;
-        /* Normal block flow for scrolling */
-    }
-
-    .game-screen__header {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: rgba(0, 0, 0, 0.9);
-    }
-
-    .game-screen__cameras-container {
-        display: contents;
-        /* Remove container influence in mobile flow */
-    }
-
-    /* My Camera (Top) */
-    .game-screen__camera:first-of-type {
-        height: 40vh;
-        min-height: 300px;
-        border-bottom: 2px solid #8b4513;
-        display: block;
-    }
-
-    /* Game Arena (Middle) */
-    .game-screen__arena {
-        height: 30vh;
-        min-height: 250px;
-        border-bottom: 2px solid #8b4513;
+    .game-screen--duel .game-screen__main {
         display: flex;
-        /* Keep arena flex for centering content */
+        flex-direction: column;
     }
 
-    /* Opponent Camera (Bottom) - Scroll to see */
-    .game-screen__camera:last-of-type {
-        height: 40vh;
-        min-height: 300px;
-        margin-bottom: 80px;
-        /* Space for controls */
-        display: block;
+    .game-screen--duel .game-screen__camera--me {
+        order: 1;
+        flex: 0 0 auto;
+        height: 28vh;
+        min-height: 150px;
+        border-bottom: 2px solid var(--color-brown);
     }
 
-    .game-screen__controls {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 0.9);
-        padding: 1rem;
-        z-index: 100;
-        display: flex;
-        justify-content: center;
+    .game-screen--duel .game-screen__arena {
+        order: 2;
+        flex: 1;
+        min-height: 140px;
+    }
+
+    .game-screen--duel .game-screen__camera--opponent {
+        order: 3;
+        flex: 0 0 auto;
+        height: 28vh;
+        min-height: 150px;
+        border-top: 2px solid var(--color-brown);
+    }
+
+    .game-screen--duel .game-screen__camera {
+        background: var(--color-black);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .game-screen--duel .game-screen__controls {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        min-height: 50px;
     }
 }
 
-.video-container {
+/* ============================================
+   Video Container Styles
+   ============================================ */
+.game-screen--duel .video-container {
     width: 100%;
     height: 100%;
     position: relative;
@@ -123,55 +136,107 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    background: #000;
+    background: var(--color-black);
 }
 
-.video-container video {
-    height: 100%;
+.game-screen--duel .video-container video {
     width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
-.game-screen__header {
-    flex: 0 0 auto;
-    padding: 0.5rem;
+.game-screen--duel .video-overlay {
+    position: absolute;
+    bottom: var(--spacing-sm);
+    right: var(--spacing-sm);
+    font-size: 1.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--radius-full);
+    width: 44px;
+    height: 44px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    border: 2px solid var(--color-accent);
     z-index: 10;
 }
 
-color: #888;
+.game-screen--duel .video-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 0.9rem;
 }
 
-.status-dot {
+/* ============================================
+   Status Indicators
+   ============================================ */
+.game-screen--duel .status-dot {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background-color: #555;
+    background-color: var(--color-brown-light);
 }
 
-.status-dot--online {
-    background-color: #4caf50;
-    box-shadow: 0 0 8px #4caf50;
+.game-screen--duel .status-dot--online {
+    background-color: var(--color-success);
+    box-shadow: 0 0 8px var(--color-success);
 }
 
-.ready-badge {
+.game-screen--duel .status-dot--offline {
+    background-color: var(--color-danger);
+}
+
+.game-screen--duel .ready-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #4caf50;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    background: var(--color-success);
     color: white;
     padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
     font-weight: bold;
+    text-transform: uppercase;
+    z-index: 10;
 }
 
-.hand-indicator {
+.game-screen--duel .ready-badge--me {
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    right: auto;
+}
+
+.game-screen--duel .hand-indicator {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    bottom: var(--spacing-sm);
+    right: var(--spacing-sm);
     font-size: 1.5rem;
+}
+
+.game-screen--duel .opponent-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    background: linear-gradient(135deg, var(--color-brown-dark), var(--color-brown));
+    color: var(--color-sand-light);
+    font-size: 0.9rem;
+}
+
+.game-screen--duel .opponent-status {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
 }

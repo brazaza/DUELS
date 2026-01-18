@@ -33,6 +33,8 @@
         "copied": "Copied!",
         "ready": "Ready",
         "notReady": "Not ready",
+        "pressReady": "Press Ready to start",
+        "waitingReady": "Waiting for players...",
         "opponent": "Opponent",
         "you": "You",
         "draw": "DRAW!",
